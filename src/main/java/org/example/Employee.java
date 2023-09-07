@@ -9,7 +9,7 @@ public class Employee extends Staff {
     private int paycheck;
     static List<Employee> employeeList = new ArrayList<>();
 
-    public Employee(int id, String name, String gender, LocalDate startDate, int paycheck) {
+    public Employee(int id, String gender, String name, LocalDate startDate, int paycheck) {
         super(id, name, gender);
         this.startDate = startDate;
         this.paycheck = paycheck;

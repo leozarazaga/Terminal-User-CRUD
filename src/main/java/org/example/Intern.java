@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Intern extends Staff {
-    private  LocalDate endDate;
+    private LocalDate endDate;
     private String quitMessage;
     static List<Intern> internList = new ArrayList<>();
 
-    public Intern(int id, String name, String gender, LocalDate endDate, String quitMessage) {
+    public Intern(int id, String gender, String name, LocalDate endDate, String quitMessage) {
         super(id, name, gender);
         this.endDate = endDate;
         this.quitMessage = quitMessage;
@@ -37,7 +37,7 @@ public class Intern extends Staff {
         this.quitMessage = quitMessage;
     }
 
-    public static String quitMessage(String message){
+    public static String quitMessage(String message) {
         return message;
     }
 

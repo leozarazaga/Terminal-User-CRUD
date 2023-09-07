@@ -19,18 +19,16 @@ public class MenuChoice {
                 System.out.println("\nDo you want to add an employee or an intern?");
                 System.out.println("1. Employee");
                 System.out.println("2. Intern");
-
+                System.out.print("\nChoose an option: ");
                 int employeeOrIntern = scanner.nextInt();
-                switch (employeeOrIntern) {
 
+                switch (employeeOrIntern) {
                     case 1:
                         addingAnEmployee(scanner);
                         break;
-
                     case 2:
                         addingAnIntern(scanner);
                         break;
-
                     default:
                         System.out.println("Invalid choice.");
                         break;
@@ -45,18 +43,11 @@ public class MenuChoice {
                     case 1:
                         totalUsersInTheSystem(scanner);
                         break;
-
                     case 2:
-                        calculateAverageWageForMen();
+                        calculateAverageWageForMen(scanner);
                         break;
-
                     case 3:
-                        System.out.println("\nAverage salary for females: $45450.90");
-                        System.out.println(" ↩ Press 1 to go back to 'Get information'");
-                        int backToGetInformation3 = scanner.nextInt();
-                        if (backToGetInformation3 == 1) {
-                            menuChoice(2);
-                        }
+                        calculateAverageWageForWomen(scanner);
                         break;
 
                     case 4:
@@ -78,16 +69,7 @@ public class MenuChoice {
                 break;
 
             case 3:
-                System.out.println("\nList of employees");
-                System.out.println("̅ ̅ ̅ ̅ ̅̅ ̅ ̅ ̅ ̅ ̅̅ ̅̅ ̅ ̅ ̅ ̅̅ ̅ ̅ ");
-
-                for (Employee employee : employeeList) {
-                    System.out.println(employee);
-                }
-
-                System.out.print("\n↩ Press Enter to go back ");
-                scanner.nextLine();
-                StartMenu.startMenu();
+                listOfEmployees(scanner);
                 break;
 
             case 4:
@@ -115,9 +97,17 @@ public class MenuChoice {
         return false;
     }
 
+
     private static void totalUsersInTheSystem(Scanner scanner) {
 
+        List<Employee> maleEmployee = employeeList.stream().filter(employee -> "male".equals(employee.getGender())).collect(Collectors.toList());
+        List<Employee> femaleEmployee = employeeList.stream().filter(employee -> "female".equals(employee.getGender())).collect(Collectors.toList());
+
         System.out.println("\nTotal users in the system: " + (employeeList.size() + internList.size()));
+        System.out.println("Number of male employees: " + maleEmployee.size());
+        System.out.println("Number of females employees: " + femaleEmployee.size());
+
+
         System.out.println();
 
         for (Employee employee : employeeList) {
@@ -155,12 +145,7 @@ public class MenuChoice {
         employeeList.add(employee1);
         System.out.println("\nEmployee added ☑️  \n" + employee1);
 
-        System.out.println(" ↩ Press 1 to Go back");
-        int backToGetInformation0 = scanner.nextInt();
-        if (backToGetInformation0 == 1) {
-            //menuChoice(2);
-            StartMenu.startMenu();
-        }
+        goBackToMainMenu(scanner);
     }
 
     private static void addingAnIntern(Scanner scanner) {
@@ -187,22 +172,59 @@ public class MenuChoice {
         internList.add(intern1);
         System.out.println("\nIntern added ☑️  \n" + intern1);
 
-        System.out.println(" ↩ Press 1 to Go back");
-        int backToGetInformation0 = scanner.nextInt();
-        if (backToGetInformation0 == 1) {
-            StartMenu.startMenu();
-        }
+        goBackToMainMenu(scanner);
     }
 
-    private static void calculateAverageWageForMen() {
+    private static void listOfEmployees(Scanner scanner) {
+        System.out.println("\nList of employees");
+        System.out.println("̅ ̅ ̅ ̅ ̅̅ ̅ ̅ ̅ ̅ ̅̅ ̅̅ ̅ ̅ ̅ ̅̅ ̅ ̅ ");
+
+        List<Employee> maleEmployee = employeeList.stream().filter(employee -> "male".equals(employee.getGender())).collect(Collectors.toList());
+        List<Employee> femaleEmployee = employeeList.stream().filter(employee -> "female".equals(employee.getGender())).collect(Collectors.toList());
+
+        System.out.println("Number of male employees: " + maleEmployee.size());
+        System.out.println("Number of females employees: " + femaleEmployee.size());
+        System.out.println();
+
+        for (Employee employee : employeeList) {
+            System.out.println(employee);
+        }
+
+        System.out.print("\n↩ Press Enter to go back ");
+        scanner.nextLine();
+        StartMenu.startMenu();
+    }
+
+    private static void calculateAverageWageForMen(Scanner scanner) {
         List<Employee> maleEmployee = employeeList.stream().filter(employee -> "male".equals(employee.getGender())).collect(Collectors.toList());
 
-        double totalSalary = maleEmployee.stream().mapToDouble(Employee::getPaycheck).sum();
-        double averageSalary = totalSalary / maleEmployee.size();
-        System.out.println("Average salary for males: " + averageSalary);
-        System.out.println("Total Salary for males: " + totalSalary);
+        System.out.println("Number of employees in the list: " + employeeList.size());
         System.out.println("Number of male employees: " + maleEmployee.size());
+
+        double totalSalary = maleEmployee.stream().mapToDouble(Employee::getPaycheck).sum();
+        double averageSalary = totalSalary / (maleEmployee.size() > 0 ? maleEmployee.size() : 1);
+
+        System.out.println("Total Salary for males: " + totalSalary);
+        System.out.println("Average salary for males: " + averageSalary);
+
+        goBackToInformationMenu(scanner);
     }
+
+    private static void calculateAverageWageForWomen(Scanner scanner){
+        List<Employee> femaleEmployee = employeeList.stream().filter(employee -> "female".equals(employee.getGender())).collect(Collectors.toList());
+
+        System.out.println("Number of employees in the list: " + employeeList.size());
+        System.out.println("Number of female employees: " + femaleEmployee.size());
+
+        double totalSalary = femaleEmployee.stream().mapToDouble(Employee::getPaycheck).sum();
+        double averageSalary = totalSalary / (femaleEmployee.size() > 0 ? femaleEmployee.size() : 1);
+
+        System.out.println("Total salary for females: " + totalSalary);
+        System.out.println("Average salary for females: " + averageSalary);
+
+        goBackToInformationMenu(scanner);
+    }
+
 
     private static void goBackToInformationMenu(Scanner scanner) {
         System.out.print("\n↩ Press Enter to go back ");
@@ -210,4 +232,11 @@ public class MenuChoice {
         scanner.nextLine();
         menuChoice(2);
     }
+
+    private static void goBackToMainMenu(Scanner scanner) {
+        System.out.print("\n↩ Press Enter to go back ");
+        scanner.nextLine();
+        StartMenu.startMenu();
+    }
 }
+
