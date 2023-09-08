@@ -19,10 +19,10 @@ public class MockDataStaff {
         Employee.employeeList.add(employee5);
         Employee.employeeList.add(employee6);
 
-        Intern intern1 = new Intern(7, "female", "Felicia Fernstone", LocalDate.of(2024, 1, 1), "Hejdå");
-        Intern intern2 = new Intern(8, "female", "Fanny Stjerna", LocalDate.of(2024, 6, 7), "Bra jobbat");
-        Intern intern3 = new Intern(9, "female", "Felicia Fernstone", LocalDate.of(2024, 11, 15), "Vi kommer inte att anställa dig");
-        Intern intern4 = new Intern(10, "female", "Fanny Stjerna", LocalDate.of(2024, 10, 25), "Du är grym!");
+        Intern intern1 = new Intern(7, "male", "Johan Jarnstam", LocalDate.of(2024, 5, 5), "Superb intern.");
+        Intern intern2 = new Intern(8, "female", "Fanny Stjerna", LocalDate.of(2024, 6, 7), "Very good job.");
+        Intern intern3 = new Intern(9, "female", "Felicia Fernstone", LocalDate.of(2024, 11, 15), "Good efforts.");
+        Intern intern4 = new Intern(10, "male", "Alexander Almström", LocalDate.of(2024, 10, 25), "Excellent!");
 
         Intern.internList.add(intern1);
         Intern.internList.add(intern2);

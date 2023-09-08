@@ -1,7 +1,10 @@
 package org.example;
 
+import java.security.cert.CollectionCertStoreParameters;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -51,12 +54,7 @@ public class MenuChoice {
                         break;
 
                     case 4:
-                        System.out.println("Ranking of employees from earliest to recent...");
-                        System.out.println(" ↩ Press 1 to go back to 'Get information'");
-                        int backToGetInformation4 = scanner.nextInt();
-                        if (backToGetInformation4 == 1) {
-                            menuChoice(2);
-                        }
+                        rankingEmployeesFromEarliestToRecent(scanner);
                         break;
 
                     case 5:
@@ -73,19 +71,7 @@ public class MenuChoice {
                 break;
 
             case 4:
-                System.out.println("\nList of interns");
-                System.out.println("̅ ̅ ̅ ̅ ̅̅ ̅ ̅ ̅ ̅ ̅̅ ̅̅ ̅ ̅ ̅ ̅ ");
-
-                for (Intern intern : internList) {
-                    System.out.println(intern);
-                }
-
-                System.out.println("\n↩ Press 1 to Go back");
-                int backToMainMenu2 = scanner.nextInt();
-                if (backToMainMenu2 == 1) {
-                    StartMenu.startMenu();
-                }
-
+                listOfInterns(scanner);
                 break;
             case 5:
                 System.out.println("Have a nice day!");
@@ -103,7 +89,8 @@ public class MenuChoice {
         List<Employee> maleEmployee = employeeList.stream().filter(employee -> "male".equals(employee.getGender())).collect(Collectors.toList());
         List<Employee> femaleEmployee = employeeList.stream().filter(employee -> "female".equals(employee.getGender())).collect(Collectors.toList());
 
-        System.out.println("\nTotal users in the system: " + (employeeList.size() + internList.size()));
+        System.out.println("\nTotal users in the system: " + (employeeList.size() + internList.size()) + "\n");
+        System.out.println("Total employees: " + employeeList.size());
         System.out.println("Number of male employees: " + maleEmployee.size());
         System.out.println("Number of females employees: " + femaleEmployee.size());
 
@@ -113,6 +100,15 @@ public class MenuChoice {
         for (Employee employee : employeeList) {
             System.out.println(employee);
         }
+
+        System.out.println();
+
+        List<Intern> maleInterns = internList.stream().filter(intern -> "male".equals(intern.getGender())).collect(Collectors.toList());
+        List<Intern> femaleInterns = internList.stream().filter(intern -> "female".equals(intern.getGender())).collect(Collectors.toList());
+
+        System.out.println("Total interns in the system: " + internList.size());
+        System.out.println("Number of male interns: " + maleInterns.size());
+        System.out.println("Number of females interns: " + femaleInterns.size() + "\n");
 
         for (Intern intern : internList) {
             System.out.println(intern);
@@ -127,12 +123,12 @@ public class MenuChoice {
         System.out.print("ID number: ");
         int employeeID = scanner.nextInt();
 
+        System.out.print("Gender (female/male): ");
+        String employeeGender = scanner.next();
+
         System.out.print("Employee name: ");
         scanner.nextLine();
         String employeeName = scanner.nextLine();
-
-        System.out.print("Gender (female/male): ");
-        String employeeGender = scanner.next();
 
         System.out.print("Start date: (yyyy-mm-dd) ");
         String employeeStartDateInput = scanner.next();
@@ -140,8 +136,9 @@ public class MenuChoice {
 
         System.out.print("Paycheck: ");
         int employeePaycheck = scanner.nextInt();
+        scanner.nextLine();
 
-        Employee employee1 = new Employee(employeeID, employeeName, employeeGender, employeeStartDate, employeePaycheck);
+        Employee employee1 = new Employee(employeeID, employeeGender, employeeName, employeeStartDate, employeePaycheck);
         employeeList.add(employee1);
         System.out.println("\nEmployee added ☑️  \n" + employee1);
 
@@ -182,17 +179,34 @@ public class MenuChoice {
         List<Employee> maleEmployee = employeeList.stream().filter(employee -> "male".equals(employee.getGender())).collect(Collectors.toList());
         List<Employee> femaleEmployee = employeeList.stream().filter(employee -> "female".equals(employee.getGender())).collect(Collectors.toList());
 
-        System.out.println("Number of male employees: " + maleEmployee.size());
-        System.out.println("Number of females employees: " + femaleEmployee.size());
+        System.out.println("Total employees in the system: " + employeeList.size());
+        System.out.println("Total male employees: " + maleEmployee.size());
+        System.out.println("Total females employees: " + femaleEmployee.size());
         System.out.println();
 
         for (Employee employee : employeeList) {
             System.out.println(employee);
         }
 
-        System.out.print("\n↩ Press Enter to go back ");
-        scanner.nextLine();
-        StartMenu.startMenu();
+        goBackToMainMenu(scanner);
+    }
+
+    private static void listOfInterns(Scanner scanner) {
+        System.out.println("\nList of in interns");
+        System.out.println("̅ ̅ ̅ ̅ ̅̅ ̅ ̅ ̅ ̅ ̅̅ ̅̅ ̅ ̅ ̅ ̅̅ ̅ ̅ ");
+
+        List<Intern> maleInterns = internList.stream().filter(intern -> "male".equals(intern.getGender())).collect(Collectors.toList());
+        List<Intern> femaleInterns = internList.stream().filter(intern -> "female".equals(intern.getGender())).collect(Collectors.toList());
+
+        System.out.println("Total interns in the system: " + internList.size());
+        System.out.println("Total male interns: " + maleInterns.size());
+        System.out.println("Total females interns: " + femaleInterns.size() + "\n");
+
+        for (Intern intern : internList) {
+            System.out.println(intern);
+        }
+
+        goBackToMainMenu(scanner);
     }
 
     private static void calculateAverageWageForMen(Scanner scanner) {
@@ -210,7 +224,7 @@ public class MenuChoice {
         goBackToInformationMenu(scanner);
     }
 
-    private static void calculateAverageWageForWomen(Scanner scanner){
+    private static void calculateAverageWageForWomen(Scanner scanner) {
         List<Employee> femaleEmployee = employeeList.stream().filter(employee -> "female".equals(employee.getGender())).collect(Collectors.toList());
 
         System.out.println("Number of employees in the list: " + employeeList.size());
@@ -222,6 +236,16 @@ public class MenuChoice {
         System.out.println("Total salary for females: " + totalSalary);
         System.out.println("Average salary for females: " + averageSalary);
 
+        goBackToInformationMenu(scanner);
+    }
+
+    private static void rankingEmployeesFromEarliestToRecent(Scanner scanner) {
+        System.out.println("\nRanking of employees from earliest to recent ⬇\n");
+
+        Collections.sort(employeeList, (employee1, employee2) -> employee1.getStartDate().compareTo(employee2.getStartDate()));
+        for (Employee employee : employeeList) {
+            System.out.println(employee.getName() + " - " + employee.getStartDate());
+        }
         goBackToInformationMenu(scanner);
     }
 
