@@ -3,10 +3,8 @@ package org.example;
 import java.security.cert.CollectionCertStoreParameters;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
+import java.time.format.DateTimeParseException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.example.Employee.employeeList;
@@ -119,6 +117,7 @@ public class MenuChoice {
 
 
     private static void addingAnEmployee(Scanner scanner) {
+
         System.out.println("\nAdding a new employee 👤");
         System.out.print("ID number: ");
         int employeeID = scanner.nextInt();
@@ -130,9 +129,18 @@ public class MenuChoice {
         scanner.nextLine();
         String employeeName = scanner.nextLine();
 
-        System.out.print("Start date: (yyyy-mm-dd) ");
-        String employeeStartDateInput = scanner.next();
-        LocalDate employeeStartDate = LocalDate.parse(employeeStartDateInput, DateTimeFormatter.ISO_LOCAL_DATE);
+        LocalDate employeeStartDate = null;
+        boolean validDate = false;
+        while (!validDate) {
+            try {
+                System.out.print("Start date (yyyy-mm-dd): ");
+                String employeeStartDateInput = scanner.next();
+                employeeStartDate = LocalDate.parse(employeeStartDateInput, DateTimeFormatter.ISO_LOCAL_DATE);
+                validDate = true;
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format. Enter a date in yyyy-mm-dd format.");
+            }
+        }
 
         System.out.print("Paycheck: ");
         int employeePaycheck = scanner.nextInt();
@@ -143,6 +151,7 @@ public class MenuChoice {
         System.out.println("\nEmployee added ☑️  \n" + employee1);
 
         goBackToMainMenu(scanner);
+
     }
 
     private static void addingAnIntern(Scanner scanner) {
@@ -157,9 +166,18 @@ public class MenuChoice {
         System.out.print("Gender (female/male): ");
         String internGender = scanner.next();
 
-        System.out.print("Start date: (yyyy-mm-dd) ");
-        String internEndDateInput = scanner.next();
-        LocalDate internEndDate = LocalDate.parse(internEndDateInput, DateTimeFormatter.ISO_LOCAL_DATE);
+        LocalDate internEndDate = null;
+        boolean validDate = false;
+        while (!validDate) {
+            try {
+                System.out.print("Start date: (yyyy-mm-dd) ");
+                String internEndDateInput = scanner.next();
+                internEndDate = LocalDate.parse(internEndDateInput, DateTimeFormatter.ISO_LOCAL_DATE);
+                validDate = true;
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format. Enter a date in yyyy-mm-dd format.");
+            }
+        }
 
         System.out.print("Feedback message: ");
         scanner.nextLine();
