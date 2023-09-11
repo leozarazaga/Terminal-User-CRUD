@@ -13,10 +13,6 @@ public class Employee extends Staff {
         super(id, name, gender);
         this.startDate = startDate;
         this.paycheck = paycheck;
-        //employeeList.add(this);
-        // 'this' is used to reference the current instance of the class,
-        // and employeeList.add(this) adds the current Employee object to
-        // the list of employees for later retrieval or manipulation.
     }
 
     //GETERS
