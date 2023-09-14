@@ -10,8 +10,15 @@ import static org.example.Intern.internList;
 public class StartMenu {
 
     static Scanner scanner = new Scanner(System.in);
+    static boolean programActive = true;
 
     public static void startMenu() {
+        if (programActive) {
+            System.out.println("╔══════════════════════╗");
+            System.out.println("  COMMAND CENTRAL LABS");
+            System.out.println("╚══════════════════════╝");
+            programActive = false;
+        }
 
         System.out.println("\n \t MAIN MENU");
         System.out.println("\t̅ ̅ ̅ ̅ ̅̅ ̅ ̅ ̅ ̅ ̅̅ ̅̅ ");
@@ -41,7 +48,9 @@ public class StartMenu {
                 break;
             default:
                 System.out.println("Wrong input!");
+
         }
+
     }
 
     private static void listOfStaff() {
@@ -79,7 +88,6 @@ public class StartMenu {
         goBackToMainMenu();
     }
 
-
     private static void goBackToMainMenu() {
         System.out.print("\n↩ Press Enter to go back ");
         scanner.nextLine();
@@ -88,3 +96,4 @@ public class StartMenu {
     }
 
 }
+

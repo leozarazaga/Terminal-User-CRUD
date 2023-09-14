@@ -2,6 +2,7 @@ package org.example;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Objects;
 import java.util.Scanner;
 import static org.example.Intern.internList;
@@ -41,25 +42,63 @@ public class InternMenu {
                 System.out.println("Invalid choice. Try again.");
         }
     }
-
     public static void addIntern() {
+        System.out.println("\nAdding a new intern");
+        String internID = GenerateRandomID.generateRandomID();
 
-        String id = GenerateRandomID.generateRandomID();
+        // Adding gender
+        String internGender = null;
+        boolean validGender = false;
+        while (!validGender) {
+            System.out.print("Gender (male/female/other): ");
+            internGender = scanner.next();
+            if ("male".equalsIgnoreCase(internGender) || "female".equalsIgnoreCase(internGender) || "other".equalsIgnoreCase(internGender)) {
+                validGender = true;
+            } else {
+                System.out.println("Invalid input. Enter 'male', 'female' or 'male'.\n");
+            }
+        }
 
-        System.out.print("Enter gender of the intern (male/female): ");
-        String gender = scanner.nextLine();
-        System.out.print("Enter name of the intern (Firstname Surname): ");
-        String name = scanner.nextLine();
-        System.out.print("Enter the end date of the internship: (yyyy-mm-dd) ");
-        String date = scanner.nextLine();
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate endDate = LocalDate.parse(date, dateFormatter);
+        // Adding name
+        scanner.nextLine();
+        String internName = null;
+        boolean validName = false;
+
+        while (!validName) {
+            System.out.print("Intern's full name: ");
+            internName = scanner.nextLine();
+            String[] names = internName.split(" ");
+
+            if (names.length == 2 && !names[0].matches(".*\\d.*") && !names[1].matches(".*\\d.*")) {
+                validName = true;
+            } else {
+                System.out.println("Invalid input. Please enter both first name and last name. Names cannot contain digits.\n");
+            }
+        }
+
+        // Adding end date
+        LocalDate endDate = null;
+        boolean validDate = false;
+        while (!validDate) {
+            try {
+                System.out.print("Enter the end date of the internship (yyyy-mm-dd): ");
+                String date = scanner.nextLine();
+                DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                endDate = LocalDate.parse(date, dateFormatter);
+                validDate = true;
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format. Use yyyy-mm-dd format (example 1992-02-27).\n");
+            }
+        }
+
+        // Adding quit message
         System.out.print("Enter a quit message for the intern: ");
-        String quitMessage = scanner.nextLine();
+        String quitMessage = scanner.next();
 
-        Intern intern = new Intern(id, gender, name, endDate, quitMessage);
-        Intern.internList.add(intern);
-        System.out.println("\nNew intern added: " + intern);
+        Intern intern1 = new Intern(internID, internGender, internName, endDate, quitMessage);
+        Intern.internList.add(intern1);
+        System.out.println("\nNew intern successfully added:");
+        System.out.println(intern1);
         returnToInternMenu();
     }
     public static void viewAllInterns() {
@@ -120,19 +159,23 @@ public class InternMenu {
         }
 
         System.out.print("\nCopy and paste the ID you would like to delete: ");
-        int id = scanner.nextInt();
+        String id = scanner.next();
 
+        boolean internFound = false;
 
         for (Intern intern : internList) {
             if (Objects.equals(intern.getId(), id)) {
                 internList.remove(intern);
                 System.out.println("Intern: " + intern.getName() + " has been removed.");
-                returnToInternMenu();
-                return;
+                internFound = true;
+                break;
             }
         }
+        if(!internFound){
         System.out.println("Intern with ID " + id + " not found. Try again.");
         deleteIntern();
+        }
+        returnToInternMenu();
     }
     private static void returnToInternMenu() {
         System.out.print("\n↩ Press Enter to go back ");

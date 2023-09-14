@@ -1,18 +1,15 @@
 package org.example;
 
 import java.time.LocalDate;
-import java.util.UUID;
-
 public class MockDataStaff {
     public static void addingMockDataOfStaff() {
 
-        System.out.println(UUID.randomUUID().toString());
         Employee employee1 = new Employee(GenerateRandomID.generateRandomID(), "female", "Kim Johnson", LocalDate.of(2023, 9, 1), 30000);
         Employee employee2 = new Employee(GenerateRandomID.generateRandomID(), "female", "Lina Luna", LocalDate.of(2019, 11, 20), 40000);
         Employee employee3 = new Employee(GenerateRandomID.generateRandomID(), "male", "Leo Winston", LocalDate.of(2018, 10, 30), 20000);
-        Employee employee4 = new Employee(GenerateRandomID.generateRandomID(), "female", "Mimmi Beckman", LocalDate.of(2018, 9, 5), 30000);
+        Employee employee4 = new Employee(GenerateRandomID.generateRandomID(), "female", "Jeffrey Bridges", LocalDate.of(2018, 9, 5), 30000);
         Employee employee5 = new Employee(GenerateRandomID.generateRandomID(), "female", "Kimberly Olsson", LocalDate.of(2022, 11, 2), 40000);
-        Employee employee6 = new Employee(GenerateRandomID.generateRandomID(), "male", "Shahd Nordström", LocalDate.of(2022, 10, 15), 20000);
+        Employee employee6 = new Employee(GenerateRandomID.generateRandomID(), "male", "Alva Nordström", LocalDate.of(2022, 10, 15), 20000);
 
         Employee.employeeList.add(employee1);
         Employee.employeeList.add(employee2);

@@ -12,15 +12,7 @@ public class EmployeeMenu {
     static Scanner scanner = new Scanner(System.in);
 
     public static void employeeMenu() {
-        System.out.print("\nEmployee\n" +
-                "̅ ̅ ̅ ̅̅ ̅ ̅ ̅ ̅̅ \n" +
-                "1. View all employees\n" +
-                "2. Add new employee\n" +
-                "3. Modify employee\n" +
-                "4. Delete employee\n" +
-                "5. ↩ Back to main menu\n" +
-                "\n" +
-                "Choose an option: ");
+        System.out.print("\nEmployee\n" + "̅ ̅ ̅ ̅̅ ̅ ̅ ̅ ̅̅ \n" + "1. View all employees\n" + "2. Add new employee\n" + "3. Modify employee\n" + "4. Delete employee\n" + "5. ↩ Back to main menu\n" + "\n" + "Choose an option: ");
 
         int chooseAnOption = scanner.nextInt();
         switch (chooseAnOption) {
@@ -45,18 +37,42 @@ public class EmployeeMenu {
     }
 
     private static void addingAnEmployee() {
-
         System.out.println("\nAdding a new employee");
 
         String employeeID = GenerateRandomID.generateRandomID();
 
-        System.out.print("Gender (female/male): ");
-        String employeeGender = scanner.next();
+        //Adding gender
+        String employeeGender = null;
+        boolean validGender = false;
 
-        System.out.print("Employee name: ");
+        while (!validGender) {
+            System.out.print("Gender (male/female/other): ");
+            employeeGender = scanner.next();
+            if ("male".equalsIgnoreCase(employeeGender) || "female".equalsIgnoreCase(employeeGender) || "other".equalsIgnoreCase(employeeGender)) {
+                validGender = true;
+            } else {
+                System.out.println("Invalid input. Enter 'male', 'female' or 'other'\n");
+            }
+        }
+
+        //Adding name
         scanner.nextLine();
-        String employeeName = scanner.nextLine();
+        String employeeName = null;
+        boolean validName = false;
 
+        while (!validName) {
+            System.out.print("Employee's full name: ");
+            employeeName = scanner.nextLine();
+            String[] names = employeeName.split(" ");
+
+            if (names.length == 2 && !names[0].matches(".*\\d.*") && !names[1].matches(".*\\d.*")) {
+                validName = true;
+            } else {
+                System.out.println("Invalid input. Please enter both first name and last name. Names cannot contain digits.\n");
+            }
+        }
+
+        //Adding date
         LocalDate employeeStartDate = null;
         boolean validDate = false;
         while (!validDate) {
@@ -66,21 +82,31 @@ public class EmployeeMenu {
                 employeeStartDate = LocalDate.parse(employeeStartDateInput, DateTimeFormatter.ISO_LOCAL_DATE);
                 validDate = true;
             } catch (DateTimeParseException e) {
-                System.out.println("Invalid date format. Enter a date in yyyy-mm-dd format.");
+                System.out.println("Invalid date format. Use yyyy-mm-dd format (example 1992-02-27).\n");
             }
         }
 
-        System.out.print("Paycheck: ");
-        int employeePaycheck = scanner.nextInt();
-
+        //Adding paycheck
+        int employeePaycheck = 0;
+        boolean validPaycheck = false;
+        while (!validPaycheck) {
+            try {
+                System.out.print("Paycheck: ");
+                employeePaycheck = scanner.nextInt();
+                validPaycheck = true;
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Enter a valid number for the paycheck.\n");
+                scanner.nextLine();
+            }
+        }
 
         Employee employee1 = new Employee(employeeID, employeeGender, employeeName, employeeStartDate, employeePaycheck);
         employeeList.add(employee1);
         System.out.println("\nNew employee successfully added:");
         System.out.println(employee1);
         goBackToEmployeeOptionMenu();
-
     }
+
     public static void viewAllEmployees() {
         System.out.println("\nView all employees\n‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾");
         System.out.println("All employees in the system: " + employeeList.size() + "\n");
@@ -102,7 +128,8 @@ public class EmployeeMenu {
         boolean foundEmployee = false;
         do {
             System.out.print("\nCopy and paste the ID you would like to modify: ");
-            String modifyEmployeeID = scanner.nextLine();
+            String modifyEmployeeID = scanner.next();
+            scanner.nextLine();
 
             for (Employee employee : employeeList) {
                 if (Objects.equals(employee.getId(), modifyEmployeeID)) {
@@ -113,14 +140,13 @@ public class EmployeeMenu {
                     String newGender = null;
                     boolean validGender = false;
                     while (!validGender) {
-                        System.out.print("Enter a gender (male/female/other): ");
-                        newGender = scanner.next();
-                        scanner.nextLine();
+                        System.out.print("\nEnter a gender (male/female/other): ");
+                        newGender = scanner.nextLine();
 
                         if (newGender.equalsIgnoreCase("male") || newGender.equalsIgnoreCase("female") || newGender.equalsIgnoreCase("other")) {
                             validGender = true;
                         } else {
-                            System.out.println("Invalid input. Enter 'male', 'female' or 'other'\n");
+                            System.out.println("Invalid input. Enter 'male', 'female', or 'other'\n");
                         }
                     }
                     employee.setGender(newGender);
@@ -153,7 +179,6 @@ public class EmployeeMenu {
                         try {
                             System.out.print("Enter new paycheck: ");
                             newPaycheck = scanner.nextInt();
-                            scanner.nextLine();
                             validPaycheck = true;
                         } catch (InputMismatchException e) {
                             System.out.println("Invalid input. Enter a valid number for the paycheck.\n");
@@ -167,11 +192,11 @@ public class EmployeeMenu {
                     break;
                 }
             }
-            if (!foundEmployee) {
-                System.out.print("Employee with ID " + modifyEmployeeID + " not found. Try again.");
-            }
-
         } while (!foundEmployee);
+
+        if (!foundEmployee) {
+            System.out.println("Not found!!");
+        }
     }
 
     public static void deleteEmployee() {
