@@ -1,18 +1,18 @@
 package org.example;
 
 public class Staff {
-    private int id;
+    private String id;
     private String name;
     private String gender;
 
-    public Staff(int id, String name, String gender) {
+    public Staff(String name, String id, String gender) {
         this.id = id;
         this.name = name;
         this.gender = gender;
     }
 
     //GETTERS
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -25,8 +25,7 @@ public class Staff {
     }
 
     //SETTERS
-
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

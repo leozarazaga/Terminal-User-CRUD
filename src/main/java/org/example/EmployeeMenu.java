@@ -4,10 +4,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.example.Employee.employeeList;
-import static org.example.Intern.internList;
 
 public class EmployeeMenu {
 
@@ -46,21 +44,11 @@ public class EmployeeMenu {
         }
     }
 
-    public static void viewAllEmployees() {
-        System.out.println("\nView all employees");
-        System.out.println("‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾");
-        for (Employee employee : employeeList) {
-            System.out.println(employee);
-        }
-        goBackToEmployeeOptionMenu();
-    }
-
     private static void addingAnEmployee() {
 
         System.out.println("\nAdding a new employee");
-        System.out.print("ID number: ");
-        int employeeID = scanner.nextInt();
-        scanner.nextLine();
+
+        String employeeID = GenerateRandomID.generateRandomID();
 
         System.out.print("Gender (female/male): ");
         String employeeGender = scanner.next();
@@ -84,80 +72,136 @@ public class EmployeeMenu {
 
         System.out.print("Paycheck: ");
         int employeePaycheck = scanner.nextInt();
-        scanner.nextLine();
+
 
         Employee employee1 = new Employee(employeeID, employeeGender, employeeName, employeeStartDate, employeePaycheck);
         employeeList.add(employee1);
-        System.out.println("\nEmployee added!  \n" + employee1);
-
+        System.out.println("\nNew employee successfully added:");
+        System.out.println(employee1);
         goBackToEmployeeOptionMenu();
 
     }
-
-    public static void deleteEmployee() {
-        System.out.println("\nDelete employee");
-        System.out.println("‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾");
-        System.out.println("Employees in the system:");
-
+    public static void viewAllEmployees() {
+        System.out.println("\nView all employees\n‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾");
+        System.out.println("All employees in the system: " + employeeList.size() + "\n");
 
         for (Employee employee : employeeList) {
             System.out.println(employee);
         }
-        System.out.print("\nEnter the ID of the employee you want to delete: ");
-        int id = scanner.nextInt();
-        scanner.nextLine();
-
-        for (Employee employee : employeeList) {
-            if (employee.getId() == id) {
-                employeeList.remove(employee);
-                System.out.println("Employee: " + employee.getName() + " has been removed.");
-                goBackToEmployeeOptionMenu();
-                return;
-            }
-            System.out.println("Employee with ID " + id + " not found. Try again.");
-            deleteEmployee();
-        }
+        goBackToEmployeeOptionMenu();
     }
 
     public static void modifyEmployee() {
         System.out.println("\nModify employee");
-        System.out.println("‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾");
+        System.out.println("‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾");
 
         for (Employee employee : employeeList) {
             System.out.println(employee);
         }
 
-        System.out.print("\nEnter the employee ID you would like to modify: ");
-        int modifyEmployeeID = scanner.nextInt();
+        boolean foundEmployee = false;
+        do {
+            System.out.print("\nCopy and paste the ID you would like to modify: ");
+            String modifyEmployeeID = scanner.nextLine();
 
-        for (Employee employee : Employee.employeeList) {
-            if (employee.getId() == modifyEmployeeID) {
+            for (Employee employee : employeeList) {
+                if (Objects.equals(employee.getId(), modifyEmployeeID)) {
+                    foundEmployee = true;
+                    System.out.println("Modifying: " + employee);
 
-                System.out.println("Modifying: " + employee);
+                    // Gender
+                    String newGender = null;
+                    boolean validGender = false;
+                    while (!validGender) {
+                        System.out.print("Enter a gender (male/female/other): ");
+                        newGender = scanner.next();
+                        scanner.nextLine();
 
-                System.out.print("Enter a gender (male/female): ");
-                String newGender = scanner.next();
-                employee.setGender(newGender);
+                        if (newGender.equalsIgnoreCase("male") || newGender.equalsIgnoreCase("female") || newGender.equalsIgnoreCase("other")) {
+                            validGender = true;
+                        } else {
+                            System.out.println("Invalid input. Enter 'male', 'female' or 'other'\n");
+                        }
+                    }
+                    employee.setGender(newGender);
 
-                System.out.print("Enter a new name: ");
-                scanner.nextLine();
-                String newName = scanner.nextLine();
-                employee.setName(newName);
+                    // New name
+                    System.out.print("Enter a new name: ");
+                    String newName = scanner.nextLine();
+                    employee.setName(newName);
 
-                System.out.print("Enter a new Start date: (yyyy-mm-dd): ");
-                String startDateInput = scanner.next();
-                LocalDate employeeStartDate = LocalDate.parse(startDateInput, DateTimeFormatter.ISO_LOCAL_DATE);
-                employee.setStartDate(employeeStartDate);
+                    // Start date
+                    LocalDate employeeStartDate = null;
+                    boolean validStartDate = false;
+                    while (!validStartDate) {
+                        try {
+                            System.out.print("Enter a new start date (yyyy-mm-dd): ");
+                            String startDateInput = scanner.next();
+                            scanner.nextLine();
+                            employeeStartDate = LocalDate.parse(startDateInput, DateTimeFormatter.ISO_LOCAL_DATE);
+                            validStartDate = true;
+                        } catch (DateTimeParseException e) {
+                            System.out.println("Invalid date format. Use yyyy-mm-dd format (example 1992-02-27).\n");
+                        }
+                    }
+                    employee.setStartDate(employeeStartDate);
 
-                System.out.print("Enter new paycheck: ");
-                int newPayCheck = scanner.nextInt();
-                employee.setPaycheck(newPayCheck);
+                    // New paycheck
+                    int newPaycheck = 0;
+                    boolean validPaycheck = false;
+                    while (!validPaycheck) {
+                        try {
+                            System.out.print("Enter new paycheck: ");
+                            newPaycheck = scanner.nextInt();
+                            scanner.nextLine();
+                            validPaycheck = true;
+                        } catch (InputMismatchException e) {
+                            System.out.println("Invalid input. Enter a valid number for the paycheck.\n");
+                            scanner.nextLine();
+                        }
+                    }
+                    employee.setPaycheck(newPaycheck);
 
-                System.out.println("Updated employee: " + employee);
-                goBackToEmployeeOptionMenu();
+                    System.out.print("\nUpdated employee: " + employee);
+                    goBackToEmployeeOptionMenu();
+                    break;
+                }
+            }
+            if (!foundEmployee) {
+                System.out.print("Employee with ID " + modifyEmployeeID + " not found. Try again.");
+            }
+
+        } while (!foundEmployee);
+    }
+
+    public static void deleteEmployee() {
+        System.out.println("\nDelete employee\n‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾");
+        System.out.println("Employees in the system:\n");
+
+        for (Employee employee : employeeList) {
+            System.out.println(employee);
+        }
+
+        System.out.print("\nCopy and paste the ID you would like to delete: ");
+        String id = scanner.next();
+
+        boolean employeeFound = false;
+
+        for (int i = 0; i < employeeList.size(); i++) {
+            Employee employee = employeeList.get(i);
+            if (Objects.equals(employee.getId(), id)) {
+                employeeList.remove(i);
+                System.out.println("Employee: " + employee.getName() + " has been removed.");
+                employeeFound = true;
+                break;
             }
         }
-        System.out.println("Employee with ID " + modifyEmployeeID + " not found. Try again.");
+
+        if (!employeeFound) {
+            System.out.println("Employee with ID " + id + " not found. Try again.");
+            deleteEmployee();
+        }
+
         goBackToEmployeeOptionMenu();
     }
 
@@ -167,7 +211,5 @@ public class EmployeeMenu {
         scanner.nextLine();
         employeeMenu();
     }
-
-
 }
 

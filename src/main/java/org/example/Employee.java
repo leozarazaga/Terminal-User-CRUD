@@ -9,8 +9,8 @@ public class Employee extends Staff {
     private int paycheck;
     static List<Employee> employeeList = new ArrayList<>();
 
-    public Employee(int id, String gender, String name, LocalDate startDate, int paycheck) {
-        super(id, name, gender);
+    public Employee(String id, String gender, String name, LocalDate startDate, int paycheck) {
+        super(name, id, gender);
         this.startDate = startDate;
         this.paycheck = paycheck;
     }
@@ -40,6 +40,6 @@ public class Employee extends Staff {
                 ", Name: " + getName() +
                 ", Gender: " + getGender() +
                 ", Start Date: " + getStartDate() +
-                ", Paycheck: " + getPaycheck();
+                ", Paycheck: $" + getPaycheck();
     }
 }

@@ -2,6 +2,7 @@ package org.example;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import java.util.Scanner;
 import static org.example.Intern.internList;
 
@@ -31,7 +32,7 @@ public class InternMenu {
                 modifyIntern();
                 break;
             case 4:
-                removeIntern();
+                deleteIntern();
                 break;
             case 5:
                 StartMenu.startMenu();
@@ -41,19 +42,10 @@ public class InternMenu {
         }
     }
 
-    public static void viewAllInterns() {
-        System.out.println("\nView all interns\n̅  ̅  ̅  ̅̅  ̅  ̅  ̅  ̅  ̅ ");
-        System.out.println("All interns in the system: " + internList.size() + "\n");
-        for (Intern intern : internList) {
-            System.out.println(intern);
-        }
-        returnToInternMenu();
-    }
-
     public static void addIntern() {
-        System.out.print("\nEnter ID of the new intern: ");
-        int id = scanner.nextInt();
-        scanner.nextLine();
+
+        String id = GenerateRandomID.generateRandomID();
+
         System.out.print("Enter gender of the intern (male/female): ");
         String gender = scanner.nextLine();
         System.out.print("Enter name of the intern (Firstname Surname): ");
@@ -70,42 +62,27 @@ public class InternMenu {
         System.out.println("\nNew intern added: " + intern);
         returnToInternMenu();
     }
-
-    public static void removeIntern() {
-        System.out.println("\nRemove intern\n‾ ‾ ‾ ‾ ‾ ‾ ‾");
+    public static void viewAllInterns() {
+        System.out.println("\nView all interns\n̅  ̅  ̅  ̅̅  ̅  ̅  ̅  ̅  ̅ ");
+        System.out.println("All interns in the system: " + internList.size() + "\n");
+        for (Intern intern : internList) {
+            System.out.println(intern);
+        }
+        returnToInternMenu();
+    }
+    public static void modifyIntern() {
+        System.out.println("\nModify intern\n‾ ‾ ‾ ‾ ‾ ‾ ‾");
 
         for (Intern intern : internList) {
             System.out.println(intern);
         }
 
-        System.out.print("\nEnter the ID of the intern you want to delete: ");
-        int id = scanner.nextInt();
+        System.out.print("\nCopy and paste the ID you would like to modify: ");
+        String modifyInternID = scanner.nextLine();
         scanner.nextLine();
 
         for (Intern intern : internList) {
-            if (intern.getId() == id) {
-                internList.remove(intern);
-                System.out.println("Intern: " + intern.getName() + " has been removed.");
-                returnToInternMenu();
-                return;
-            }
-        }
-        System.out.println("Intern with ID " + id + " not found. Try again.");
-        removeIntern();
-    }
-
-    public static void modifyIntern() {
-        System.out.println("\nModify intern\n‾ ‾ ‾ ‾ ‾ ‾ ‾");
-
-        for (Intern intern : internList) {
-            System.out.print(intern);
-        }
-
-        System.out.print("\nEnter the intern ID you would like to modify: ");
-        int modifyInternID = scanner.nextInt();
-
-        for (Intern intern : internList) {
-            if (intern.getId() == modifyInternID) {
+            if (Objects.equals(intern.getId(), modifyInternID)) {
                 System.out.println("Modifying: " + intern);
 
                 System.out.print("Enter a gender (male/female): ");
@@ -134,13 +111,33 @@ public class InternMenu {
             modifyIntern();
         }
     }
+    public static void deleteIntern() {
+        System.out.println("\nRemove intern\n‾ ‾ ‾ ‾ ‾ ‾ ‾");
+        System.out.println("Interns in the system:");
 
+        for (Intern intern : internList) {
+            System.out.println(intern);
+        }
+
+        System.out.print("\nCopy and paste the ID you would like to delete: ");
+        int id = scanner.nextInt();
+
+
+        for (Intern intern : internList) {
+            if (Objects.equals(intern.getId(), id)) {
+                internList.remove(intern);
+                System.out.println("Intern: " + intern.getName() + " has been removed.");
+                returnToInternMenu();
+                return;
+            }
+        }
+        System.out.println("Intern with ID " + id + " not found. Try again.");
+        deleteIntern();
+    }
     private static void returnToInternMenu() {
         System.out.print("\n↩ Press Enter to go back ");
         scanner.nextLine();
         scanner.nextLine();
         InternMenu.internMenu();
     }
-
-
 }
