@@ -9,8 +9,8 @@ public class Intern extends Staff {
     private String quitMessage;
     static List<Intern> internList = new ArrayList<>();
 
-    public Intern(String id, String gender, String name, LocalDate endDate, String quitMessage) {
-        super(name, id, gender);
+    public Intern(String id, String gender, String name, LocalDate endDate, String quitMessage, int staffNumber) {
+        super(id, name, gender, staffNumber);
         this.endDate = endDate;
         this.quitMessage = quitMessage;
         //internList.add(this);
@@ -37,15 +37,19 @@ public class Intern extends Staff {
         this.quitMessage = quitMessage;
     }
 
+    public static String quitMessage(String message) {
+        return message;
+    }
 
 
     @Override
     public String toString() {
-        return "ID: " + getId() +
+        return "#" + getStaffNumber() +
                 ", Name: " + getName() +
                 ", Gender: " + getGender() +
                 ", End Date: " + getEndDate() +
-                ", Quit Message: " + getQuitMessage();
+                ", Quit Message: " + getQuitMessage() +
+                ", ID: " + getId();
     }
 
 

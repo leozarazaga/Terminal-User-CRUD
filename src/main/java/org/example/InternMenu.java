@@ -5,6 +5,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Objects;
 import java.util.Scanner;
+
+import static org.example.Employee.employeeList;
 import static org.example.Intern.internList;
 
 public class InternMenu {
@@ -42,9 +44,18 @@ public class InternMenu {
                 System.out.println("Invalid choice. Try again.");
         }
     }
+
     public static void addIntern() {
         System.out.println("\nAdding a new intern");
         String internID = GenerateRandomID.generateRandomID();
+
+        //StaffNumber
+        int internStaffNumber = 7;
+        for (Intern intern : internList) {
+            if (intern.getStaffNumber() == internStaffNumber) {
+                internStaffNumber++;
+            }
+        }
 
         // Adding gender
         String internGender = null;
@@ -72,7 +83,7 @@ public class InternMenu {
             if (names.length == 2 && !names[0].matches(".*\\d.*") && !names[1].matches(".*\\d.*")) {
                 validName = true;
             } else {
-                System.out.println("Invalid input. Please enter both first name and last name. Names cannot contain digits.\n");
+                System.out.println("Invalid input. Enter both first and last name. Names cannot contain digits.\n");
             }
         }
 
@@ -95,61 +106,93 @@ public class InternMenu {
         System.out.print("Enter a quit message for the intern: ");
         String quitMessage = scanner.next();
 
-        Intern intern1 = new Intern(internID, internGender, internName, endDate, quitMessage);
+        Intern intern1 = new Intern(internID, internGender, internName, endDate, quitMessage, internStaffNumber);
         Intern.internList.add(intern1);
         System.out.println("\nNew intern successfully added:");
         System.out.println(intern1);
         returnToInternMenu();
     }
+
     public static void viewAllInterns() {
         System.out.println("\nView all interns\n̅  ̅  ̅  ̅̅  ̅  ̅  ̅  ̅  ̅ ");
         System.out.println("All interns in the system: " + internList.size() + "\n");
-        for (Intern intern : internList) {
-            System.out.println(intern);
-        }
+
+        internList.stream()
+                .sorted((a, b) -> Integer.compare(a.getStaffNumber(), b.getStaffNumber()))
+                .forEach(System.out::println);
         returnToInternMenu();
     }
+
     public static void modifyIntern() {
-        System.out.println("\nModify intern\n‾ ‾ ‾ ‾ ‾ ‾ ‾");
+        System.out.println("\nModify intern\n‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾");
 
         for (Intern intern : internList) {
             System.out.println(intern);
         }
 
-        System.out.print("\nCopy and paste the ID you would like to modify: ");
-        String modifyInternID = scanner.nextLine();
-        scanner.nextLine();
+        boolean foundIntern = false;
+        do {
+            System.out.print("\nWrite the staff number you want to modify: #");
+            int staffNumber = scanner.nextInt();
+            scanner.nextLine();
 
-        for (Intern intern : internList) {
-            if (Objects.equals(intern.getId(), modifyInternID)) {
-                System.out.println("Modifying: " + intern);
+            for (Intern intern : internList) {
+                if (Objects.equals(intern.getStaffNumber(), staffNumber)) {
+                    foundIntern = true;
+                    System.out.println("Modifying: " + intern);
 
-                System.out.print("Enter a gender (male/female): ");
-                String newGender = scanner.next();
-                intern.setGender(newGender);
+                    // Gender
+                    String newGender = null;
+                    boolean validGender = false;
+                    while (!validGender) {
+                        System.out.print("\nEnter a gender (male/female/other): ");
+                        newGender = scanner.nextLine();
 
-                System.out.print("Enter a new name: ");
-                scanner.nextLine();
-                String newName = scanner.nextLine();
-                intern.setName(newName);
+                        if (newGender.equalsIgnoreCase("male") || newGender.equalsIgnoreCase("female") || newGender.equalsIgnoreCase("other")) {
+                            validGender = true;
+                        } else {
+                            System.out.println("Invalid input. Enter 'male' or 'female'\n");
+                        }
+                    }
+                    intern.setGender(newGender);
 
-                System.out.print("Enter a new end date (yyyy-mm-dd): ");
-                String endDateInput = scanner.next();
-                LocalDate endDate = LocalDate.parse(endDateInput, DateTimeFormatter.ISO_LOCAL_DATE);
-                intern.setEndDate(endDate);
+                    // New name
+                    System.out.print("Enter a new name: ");
+                    String newName = scanner.nextLine();
+                    intern.setName(newName);
 
-                System.out.print("Enter a new message: ");
-                scanner.nextLine();
-                String quitMessage = scanner.nextLine();
-                intern.setQuitMessage(quitMessage);
+                    // End date
+                    LocalDate internEndDate = null;
+                    boolean validEndDate = false;
+                    while (!validEndDate) {
+                        try {
+                            System.out.print("Enter a new end date (yyyy-mm-dd): ");
+                            String endDateInput = scanner.next();
+                            scanner.nextLine();
+                            internEndDate = LocalDate.parse(endDateInput, DateTimeFormatter.ISO_LOCAL_DATE);
+                            validEndDate = true;
+                        } catch (DateTimeParseException e) {
+                            System.out.println("Invalid date format. Use yyyy-mm-dd format (example 1992-02-27).\n");
+                        }
+                    }
+                    intern.setEndDate(internEndDate);
 
-                System.out.println("Updated intern: " + intern);
-                returnToInternMenu();
+                    // New quit message
+                    System.out.print("Enter a new quit message: ");
+                    String quitMessage = scanner.next();
+                    intern.setQuitMessage(quitMessage);
+
+                    System.out.print("\nUpdated intern: " + intern);
+                    returnToInternMenu();
+                    break;
+                }
             }
-            System.out.print("Intern with ID " + modifyInternID + " not found. Try again.");
-            modifyIntern();
-        }
+            if (!foundIntern) {
+                System.out.println("Intern with staff number " + staffNumber + " not found. Try again.");
+            }
+        } while (!foundIntern);
     }
+
     public static void deleteIntern() {
         System.out.println("\nRemove intern\n‾ ‾ ‾ ‾ ‾ ‾ ‾");
         System.out.println("Interns in the system:");
@@ -158,25 +201,27 @@ public class InternMenu {
             System.out.println(intern);
         }
 
-        System.out.print("\nCopy and paste the ID you would like to delete: ");
-        String id = scanner.next();
+        System.out.print("\nWrite the staff number you want to delete: #");
+        int staffNumber = scanner.nextInt();
+
 
         boolean internFound = false;
 
         for (Intern intern : internList) {
-            if (Objects.equals(intern.getId(), id)) {
+            if (Objects.equals(intern.getStaffNumber(), staffNumber)) {
                 internList.remove(intern);
                 System.out.println("Intern: " + intern.getName() + " has been removed.");
                 internFound = true;
                 break;
             }
         }
-        if(!internFound){
-        System.out.println("Intern with ID " + id + " not found. Try again.");
-        deleteIntern();
+        if (!internFound) {
+            System.out.println("Intern with ID " + staffNumber + " not found. Try again.");
+            deleteIntern();
         }
         returnToInternMenu();
     }
+
     private static void returnToInternMenu() {
         System.out.print("\n↩ Press Enter to go back ");
         scanner.nextLine();
