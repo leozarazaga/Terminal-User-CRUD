@@ -4,11 +4,13 @@ public class Staff {
     private String id;
     private String name;
     private String gender;
+    private int staffNumber;
 
-    public Staff(String name, String id, String gender) {
+    public Staff(String id, String name, String gender, int staffNumber) {
         this.id = id;
         this.name = name;
         this.gender = gender;
+        this.staffNumber = staffNumber;
     }
 
     //GETTERS
@@ -24,11 +26,12 @@ public class Staff {
         return gender;
     }
 
-    //SETTERS
-    public void setId(String id) {
-        this.id = id;
+    public int getStaffNumber() {
+        return staffNumber;
     }
 
+
+    //SETTERS
     public void setName(String name) {
         this.name = name;
     }
@@ -37,5 +40,7 @@ public class Staff {
         this.gender = gender;
     }
 
-
+    public void setStaffNumber(int staffNumber) {
+        this.staffNumber = staffNumber;
+    }
 }

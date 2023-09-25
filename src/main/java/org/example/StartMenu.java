@@ -2,6 +2,7 @@ package org.example;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.example.Employee.employeeList;
@@ -13,6 +14,7 @@ public class StartMenu {
     static boolean programActive = true;
 
     public static void startMenu() {
+
         if (programActive) {
             System.out.println("╔══════════════════════╗");
             System.out.println("  COMMAND CENTRAL LABS");

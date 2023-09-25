@@ -8,7 +8,6 @@ import java.util.*;
 import static org.example.Employee.employeeList;
 
 public class EmployeeMenu {
-
     static Scanner scanner = new Scanner(System.in);
 
     public static void employeeMenu() {
@@ -38,8 +37,15 @@ public class EmployeeMenu {
 
     private static void addingAnEmployee() {
         System.out.println("\nAdding a new employee");
-
         String employeeID = GenerateRandomID.generateRandomID();
+
+        //StaffNumber
+        int employeeStaffNumber = 1;
+        for (Employee employee : employeeList) {
+            if (employee.getStaffNumber() == employeeStaffNumber) {
+                employeeStaffNumber++;
+            }
+        }
 
         //Adding gender
         String employeeGender = null;
@@ -68,7 +74,7 @@ public class EmployeeMenu {
             if (names.length == 2 && !names[0].matches(".*\\d.*") && !names[1].matches(".*\\d.*")) {
                 validName = true;
             } else {
-                System.out.println("Invalid input. Please enter both first name and last name. Names cannot contain digits.\n");
+                System.out.println("Invalid input. Enter both first and last name. Names cannot contain digits.\n");
             }
         }
 
@@ -100,7 +106,7 @@ public class EmployeeMenu {
             }
         }
 
-        Employee employee1 = new Employee(employeeID, employeeGender, employeeName, employeeStartDate, employeePaycheck);
+        Employee employee1 = new Employee(employeeID, employeeGender, employeeName, employeeStartDate, employeePaycheck, employeeStaffNumber);
         employeeList.add(employee1);
         System.out.println("\nNew employee successfully added:");
         System.out.println(employee1);
@@ -111,15 +117,15 @@ public class EmployeeMenu {
         System.out.println("\nView all employees\n‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾");
         System.out.println("All employees in the system: " + employeeList.size() + "\n");
 
-        for (Employee employee : employeeList) {
-            System.out.println(employee);
-        }
+            employeeList.stream()
+                    .sorted((a, b) -> Integer.compare(a.getStaffNumber(), b.getStaffNumber()))
+                    .forEach(System.out::println);
+
         goBackToEmployeeOptionMenu();
     }
 
     public static void modifyEmployee() {
-        System.out.println("\nModify employee");
-        System.out.println("‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾");
+        System.out.println("\nModify employee\n‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾");
 
         for (Employee employee : employeeList) {
             System.out.println(employee);
@@ -127,12 +133,12 @@ public class EmployeeMenu {
 
         boolean foundEmployee = false;
         do {
-            System.out.print("\nCopy and paste the ID you would like to modify: ");
-            String modifyEmployeeID = scanner.next();
+            System.out.print("\nWrite the staff number you want to modify: #");
+            int staffNumber = scanner.nextInt();
             scanner.nextLine();
 
             for (Employee employee : employeeList) {
-                if (Objects.equals(employee.getId(), modifyEmployeeID)) {
+                if (Objects.equals(employee.getStaffNumber(), staffNumber)) {
                     foundEmployee = true;
                     System.out.println("Modifying: " + employee);
 
@@ -191,12 +197,10 @@ public class EmployeeMenu {
                     goBackToEmployeeOptionMenu();
                     break;
                 }
+            } if (!foundEmployee) {
+                System.out.println("Employee with staff number " + staffNumber + " not found. Try again.");
             }
         } while (!foundEmployee);
-
-        if (!foundEmployee) {
-            System.out.println("Not found!!");
-        }
     }
 
     public static void deleteEmployee() {
@@ -207,14 +211,14 @@ public class EmployeeMenu {
             System.out.println(employee);
         }
 
-        System.out.print("\nCopy and paste the ID you would like to delete: ");
-        String id = scanner.next();
+        System.out.print("\nWrite the staff number you want to delete: #");
+        int staffNumber = scanner.nextInt();
 
         boolean employeeFound = false;
 
         for (int i = 0; i < employeeList.size(); i++) {
             Employee employee = employeeList.get(i);
-            if (Objects.equals(employee.getId(), id)) {
+            if (Objects.equals(employee.getStaffNumber(), staffNumber)) {
                 employeeList.remove(i);
                 System.out.println("Employee: " + employee.getName() + " has been removed.");
                 employeeFound = true;
@@ -223,7 +227,7 @@ public class EmployeeMenu {
         }
 
         if (!employeeFound) {
-            System.out.println("Employee with ID " + id + " not found. Try again.");
+            System.out.println("Employee with staff number " + staffNumber + " not found. Try again.");
             deleteEmployee();
         }
 
